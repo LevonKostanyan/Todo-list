@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import "./App.css";
 
 const App = () => {
@@ -6,6 +6,7 @@ const App = () => {
     const [newTask, setNewTask] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [filter, setFilter] = useState("all");
+    const isRenderedRef = useRef(false)
 
     const tasksPerPage = 5;
 
@@ -17,12 +18,15 @@ const App = () => {
     }, []);
 
     useEffect(() => {
-        localStorage.setItem("tasks", JSON.stringify(tasks));
+        if (isRenderedRef.current) {
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
+        isRenderedRef.current = true;
     }, [tasks]);
 
     const addTask = () => {
         if (newTask.trim()) {
-            setTasks([...tasks, { text: newTask, completed: false }]);
+            setTasks([...tasks, {text: newTask, completed: false}]);
             setNewTask("");
         }
     };
@@ -40,7 +44,7 @@ const App = () => {
     const toggleCompletion = (index) => {
         setTasks(
             tasks.map((task, i) =>
-                i === index ? { ...task, completed: !task.completed } : task
+                i === index ? {...task, completed: !task.completed} : task
             )
         );
     };
