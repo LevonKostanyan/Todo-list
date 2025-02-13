@@ -11,22 +11,22 @@ const App = () => {
     const tasksPerPage = 5;
 
     useEffect(() => {
-        const savedTasks = JSON.parse(localStorage.getItem("tasks"));
-        if (savedTasks) {
-            setTasks(savedTasks);
-        }
-    }, []);
-
-    useEffect(() => {
         if (isRenderedRef.current) {
             localStorage.setItem("tasks", JSON.stringify(tasks));
         }
         isRenderedRef.current = true;
     }, [tasks]);
 
+    useEffect(() => {
+        const savedTasks = JSON.parse(localStorage.getItem("tasks"));
+        if (savedTasks) {
+            setTasks(savedTasks);
+        }
+    }, []);
+
     const addTask = () => {
         if (newTask.trim()) {
-            setTasks([...tasks, {text: newTask, completed: false}]);
+            setTasks([{text: newTask, completed: false}, ...tasks]);
             setNewTask("");
         }
     };
